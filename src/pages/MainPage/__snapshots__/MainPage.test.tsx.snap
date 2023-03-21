@@ -11,7 +11,7 @@ exports[`test mainPage should render correctly 1`] = `
       VK Маркет
     </h2>
     <h3>
-      03:00:00
+      00:00:00
     </h3>
     <div
       class="main-page__parameters"
