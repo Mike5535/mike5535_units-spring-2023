@@ -6,6 +6,9 @@ import {
 } from '../../utils';
 import { MainPage } from './MainPage';
 import { PriceSymbol } from '../../types';
+import * as React from 'react';
+import type { Category } from '../../types';
+import * as timeModule  from '../../hooks/useCurrentTime'
 
 const products = [{
     id: 1,
@@ -32,35 +35,37 @@ const products = [{
     category: 'Электроника',
 }];
 
-afterEach(jest.clearAllMocks);
-
 jest
     .useFakeTimers()
-    .setSystemTime(new Date(2011, 0, 1, 3, 0, 0, 0));
+    .setSystemTime(new Date('2011-01-01T00:00:00.000Z'));
 
-jest.mock('../../hooks/useProducts', () => {
-    return {
-        __esModule: true,
-        useProducts: jest.fn(() => products),
-    };
-});
-jest.mock('../../utils/getNextSortBy', () => {
-    return {
+jest.mock('../../utils/getNextSortBy', () => (
+    {
         __esModule: true,
         getNextSortBy: jest.fn(() => 'по возрастанию цены'),
-    };
-});
+    })
+);
 
-jest.mock('../../utils/getPrice', () => {
-    return {
+jest.mock('../../utils/getPrice', () => (
+    {
         __esModule: true,
         getPrice: jest.fn((value: number, symbol: PriceSymbol = '₽'): string =>
             `${value.toLocaleString('ru-RU')} ${symbol}`
         ),
-    };
-});
+    })
+);
+
+jest.mock('../../hooks/useProducts', () => (
+    {
+        __esModule: true,
+        useProducts: jest.fn(() => products),
+    })
+);
 
 describe('test mainPage', () => {
+    afterEach(() => {
+        jest.resetModules();
+    });
     it('should render correctly', () => {
         const rendered = render(
             <MainPage />
@@ -75,5 +80,26 @@ describe('test mainPage', () => {
         expect(getNextSortBy).toHaveBeenCalledTimes(0);
         fireEvent.click(rendered.getByText('Сортировать по умолчанию'));
         expect(getNextSortBy).toHaveBeenCalledTimes(1);
+    });
+});
+
+
+describe('test mainPage select category', () => {
+    it('should select category', () => {
+        jest.spyOn(timeModule, 'useCurrentTime').mockImplementationOnce(jest.fn());
+        const initState: Category[] = [];
+        const setState = jest.fn();
+        jest
+            .spyOn(React, 'useState').mockImplementationOnce(() => [initState, setState] as [any, any]);
+
+
+
+        const { container } = render(
+            <MainPage />
+        );
+
+        expect(setState).toHaveBeenCalledTimes(0);
+        fireEvent.click(container.querySelector('.categories__badge') as HTMLDivElement);
+        expect(setState).toHaveBeenCalledTimes(1);
     });
 });

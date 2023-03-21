@@ -1,13 +1,12 @@
 import { getNextSortBy } from "../getNextSortBy";
+import type { SortBy } from "../../types";
 
-describe('test applyCategories function', () => {
-    it('should return по возрастанию цены if sortBy === по умолчанию', () => {
-        expect(getNextSortBy('по умолчанию')).toBe('по возрастанию цены');
-    });
-    it('should return по убыванию цены if sortBy === по возрастанию цены', () => {
-        expect(getNextSortBy('по возрастанию цены')).toBe('по убыванию цены');
-    });
-    it('should return по убыванию цены if sortBy === по умолчанию', () => {
-        expect(getNextSortBy('по убыванию цены')).toBe('по умолчанию');
+const sortValues: SortBy[] = ['по умолчанию', 'по возрастанию цены', 'по убыванию цены'];
+
+describe.each(sortValues)('test applyCategories function', (sortValue) => {
+    const idx = sortValues.indexOf(sortValue);
+    const sorted = idx === sortValues.length - 1 ? sortValues[0] : sortValues[idx + 1];
+    it(`should return ${sortValue} if sortBy === ${sorted}`, () => {
+        expect(getNextSortBy(sortValue)).toBe(sorted);
     });
 });

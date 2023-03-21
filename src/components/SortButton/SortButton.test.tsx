@@ -15,6 +15,17 @@ describe('Button render', () => {
         );
         expect(renderedButton.asFragment()).toMatchSnapshot();
     });
+    it('should not call callback on render', () => {
+        const onSortButtonClick = jest.fn();
+        render(
+            <SortButton
+                currentSort="по умолчанию"
+                onSortButtonClick={onSortButtonClick}
+            />
+        );
+
+        expect(onSortButtonClick).toHaveBeenCalledTimes(0);
+    });
     it('should contain sort text', () => {
         const onSortButtonClick = jest.fn();
         const renderedButton = render(

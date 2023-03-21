@@ -1,19 +1,19 @@
 import { Category } from "../../types";
 import { updateCategories } from "../updateCategories";
 
+const catgories: Category[] = [
+    'Для дома',
+    'Одежда',
+    'Электроника'
+];
+
 describe('test updateCategories function', () => {
-    let catgories: Category[];
-    beforeAll(() => {
-        catgories = [
-            'Для дома',
-            'Одежда',
-            'Электроника'
-        ]
-    });
     it('return catgories without changedCategory', () => {
-        expect(updateCategories(catgories,'Для дома')).toEqual<Category[]>(catgories.filter(el => el !== 'Для дома'));
+        const filtredCatgories = catgories.filter(el => el !== 'Для дома')
+        expect(updateCategories(catgories,'Для дома')).toEqual<Category[]>(filtredCatgories);
     });
     it('return catgories with new changedCategory', () => {
-        expect(updateCategories(catgories.filter(el => el !== 'Электроника'),'Электроника')).toEqual<Category[]>(catgories);
+        const testData = catgories.filter(el => el !== 'Электроника');
+        expect(updateCategories(testData,'Электроника')).toEqual<Category[]>(catgories);
     });
 });
