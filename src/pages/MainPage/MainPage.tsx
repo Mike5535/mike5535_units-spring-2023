@@ -8,7 +8,7 @@ import {
     applyCategories,
     updateCategories,
     getNextSortBy,
-    productComparator, 
+    productComparator,
 } from '../../utils';
 
 import './MainPage.css';
